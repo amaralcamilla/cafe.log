@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {
   Modal,
+  Pressable,
   View,
   Text,
   TextInput,
@@ -10,9 +11,10 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import {Coffee, CoffeeInput, CoffeeType, Intensity} from '../types/coffee';
+import {Coffee, CoffeeInput, CoffeeType, Roast, Rating} from '../types/coffee';
 
 const COFFEE_TYPES: CoffeeType[] = [
+    'Coado',
   'Espresso',
   'Cappuccino',
   'Latte',
@@ -21,21 +23,14 @@ const COFFEE_TYPES: CoffeeType[] = [
   'Macchiato',
 ];
 
-const INTENSITIES: Intensity[] = [1, 2, 3, 4, 5];
-
-const INTENSITY_LABELS: Record<Intensity, string> = {
-  1: 'Suave',
-  2: 'Leve',
-  3: 'Médio',
-  4: 'Forte',
-  5: 'Intenso',
-};
+const ROASTS: Roast[] = ['Clara', 'Média', 'Escura'];
 
 const DEFAULT_FORM: CoffeeInput = {
   brand: '',
   type: 'Espresso',
-  intensity: 3,
-  quantity: 250,
+  rating: 0,
+  roast: 'Média',
+  comment: '',
 };
 
 interface CoffeeFormProps {
@@ -63,6 +58,10 @@ export function CoffeeForm({visible, coffee, onSave, onClose}: CoffeeFormProps) 
     onClose();
   }
 
+  function handleStarPress(star: Rating) {
+    setForm(f => ({...f, rating: f.rating === star ? 0 : star}));
+  }
+
   const isEditing = coffee !== null;
   const canSave = form.brand.trim().length > 0;
 
@@ -72,10 +71,11 @@ export function CoffeeForm({visible, coffee, onSave, onClose}: CoffeeFormProps) 
       animationType="slide"
       transparent
       statusBarTranslucent>
-      <View style={styles.overlay}>
+      <Pressable style={styles.overlay} onPress={onClose}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.sheetWrapper}>
+          <Pressable>
           <View style={styles.sheet}>
             <View style={styles.handle} />
 
@@ -90,7 +90,7 @@ export function CoffeeForm({visible, coffee, onSave, onClose}: CoffeeFormProps) 
                 style={styles.input}
                 value={form.brand}
                 onChangeText={brand => setForm(f => ({...f, brand}))}
-                placeholder="ex: Illy, Três Corações..."
+                placeholder="ex: Illy, Starbucks, Três Corações..."
                 placeholderTextColor="#5A3A22"
                 autoCapitalize="words"
               />
@@ -100,19 +100,19 @@ export function CoffeeForm({visible, coffee, onSave, onClose}: CoffeeFormProps) 
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.typeList}>
+                contentContainerStyle={styles.pillList}>
                 {COFFEE_TYPES.map(type => (
                   <TouchableOpacity
                     key={type}
                     style={[
-                      styles.typePill,
-                      form.type === type && styles.typePillSelected,
+                      styles.pill,
+                      form.type === type && styles.pillSelected,
                     ]}
                     onPress={() => setForm(f => ({...f, type}))}>
                     <Text
                       style={[
-                        styles.typePillText,
-                        form.type === type && styles.typePillTextSelected,
+                        styles.pillText,
+                        form.type === type && styles.pillTextSelected,
                       ]}>
                       {type}
                     </Text>
@@ -120,44 +120,54 @@ export function CoffeeForm({visible, coffee, onSave, onClose}: CoffeeFormProps) 
                 ))}
               </ScrollView>
 
-              {/* Intensidade */}
-              <Text style={styles.label}>
-                Intensidade — {INTENSITY_LABELS[form.intensity]}
-              </Text>
-              <View style={styles.intensityRow}>
-                {INTENSITIES.map(level => (
+              {/* Nota */}
+              <Text style={styles.label}>Nota</Text>
+              <View style={styles.starsRow}>
+                {([1, 2, 3, 4, 5] as Rating[]).map(star => (
                   <TouchableOpacity
-                    key={level}
-                    style={[
-                      styles.intensityBtn,
-                      form.intensity === level && styles.intensityBtnSelected,
-                    ]}
-                    onPress={() => setForm(f => ({...f, intensity: level}))}>
-                    <Text style={styles.intensityIcon}>
-                      {level <= form.intensity ? '☕' : '○'}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.intensityNum,
-                        form.intensity === level && styles.intensityNumSelected,
-                      ]}>
-                      {level}
+                    key={star}
+                    onPress={() => handleStarPress(star)}
+                    hitSlop={{top: 8, bottom: 8, left: 4, right: 4}}>
+                    <Text style={styles.star}>
+                      {star <= form.rating ? '★' : '☆'}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </View>
 
-              {/* Quantidade */}
-              <Text style={styles.label}>Quantidade (g)</Text>
+              {/* Torra */}
+              <Text style={styles.label}>Torra</Text>
+              <View style={styles.pillList}>
+                {ROASTS.map(roast => (
+                  <TouchableOpacity
+                    key={roast}
+                    style={[
+                      styles.pill,
+                      form.roast === roast && styles.pillSelected,
+                    ]}
+                    onPress={() => setForm(f => ({...f, roast}))}>
+                    <Text
+                      style={[
+                        styles.pillText,
+                        form.roast === roast && styles.pillTextSelected,
+                      ]}>
+                      {roast}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Comentário */}
+              <Text style={styles.label}>Comentário</Text>
               <TextInput
-                style={styles.input}
-                value={form.quantity > 0 ? form.quantity.toString() : ''}
-                onChangeText={val =>
-                  setForm(f => ({...f, quantity: Number(val) || 0}))
-                }
-                keyboardType="numeric"
-                placeholder="250"
+                style={[styles.input, styles.commentInput]}
+                value={form.comment}
+                onChangeText={comment => setForm(f => ({...f, comment}))}
+                placeholder="Notas de sabor, aroma, textura..."
                 placeholderTextColor="#5A3A22"
+                multiline
+                numberOfLines={3}
+                textAlignVertical="top"
               />
             </ScrollView>
 
@@ -176,36 +186,45 @@ export function CoffeeForm({visible, coffee, onSave, onClose}: CoffeeFormProps) 
               </TouchableOpacity>
             </View>
           </View>
+          </Pressable>
         </KeyboardAvoidingView>
-      </View>
+      </Pressable>
     </Modal>
   );
 }
 
+// palette:
+// 9c6644
+// 7f5539
+// b08968
+// ddb892
+// e6ccb2
+// ede0d4
+
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: 'rgba(0,0,0,0.65)',
     justifyContent: 'flex-end',
   },
   sheetWrapper: {
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: '#1A0A02',
+    backgroundColor: '#7f5539',
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     padding: 24,
     paddingBottom: 40,
     borderWidth: 1,
     borderBottomWidth: 0,
-    borderColor: '#4A2614',
-    maxHeight: '92%',
+    borderColor: '#b08968',
+    maxHeight: '100%',
   },
   handle: {
     width: 40,
     height: 4,
-    backgroundColor: '#4A2614',
+    backgroundColor: '#b08968',
     borderRadius: 2,
     alignSelf: 'center',
     marginBottom: 22,
@@ -213,78 +232,60 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#F0E2D0',
+    color: '#ede0d4',
     marginBottom: 22,
   },
   label: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#9E7A5A',
+    color: '#ede0d4',
     textTransform: 'uppercase',
     letterSpacing: 1.4,
     marginBottom: 10,
     marginTop: 20,
   },
   input: {
-    backgroundColor: '#0F0600',
+    backgroundColor: '#e6ccb2',
     borderWidth: 1,
-    borderColor: '#4A2614',
+    borderColor: '#7f5539',
     borderRadius: 12,
     padding: 14,
-    color: '#F0E2D0',
+    color: '#e6ccb2',
     fontSize: 16,
   },
-  typeList: {
+  commentInput: {
+    minHeight: 90,
+  },
+  pillList: {
+    flexDirection: 'row',
     gap: 8,
     paddingRight: 4,
   },
-  typePill: {
+  pill: {
     paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 999,
-    backgroundColor: '#0F0600',
-    borderWidth: 1,
-    borderColor: '#4A2614',
+    backgroundColor: '#9c6644',
   },
-  typePillSelected: {
-    backgroundColor: '#D4924A',
-    borderColor: '#D4924A',
+  pillSelected: {
+    backgroundColor: '#ddb892',
+      borderWidth: 1,
+    borderColor: '#0F0600',
   },
-  typePillText: {
-    color: '#9E7A5A',
+  pillText: {
+    color: '#ddb892',
     fontWeight: '600',
     fontSize: 14,
   },
-  typePillTextSelected: {
+  pillTextSelected: {
     color: '#0F0600',
   },
-  intensityRow: {
+  starsRow: {
     flexDirection: 'row',
     gap: 8,
   },
-  intensityBtn: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
-    backgroundColor: '#0F0600',
-    borderWidth: 1,
-    borderColor: '#4A2614',
-    gap: 6,
-  },
-  intensityBtnSelected: {
-    borderColor: '#D4924A',
-    backgroundColor: '#2A1505',
-  },
-  intensityIcon: {
-    fontSize: 20,
-  },
-  intensityNum: {
-    fontSize: 12,
-    color: '#9E7A5A',
-    fontWeight: '600',
-  },
-  intensityNumSelected: {
+  star: {
+    fontSize: 34,
     color: '#D4924A',
   },
   buttons: {
@@ -316,7 +317,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#3D2010',
   },
   saveText: {
-    color: '#0F0600',
+    color: '#9E7A5A',
     fontWeight: '700',
     fontSize: 15,
   },

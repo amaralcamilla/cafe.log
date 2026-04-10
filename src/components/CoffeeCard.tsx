@@ -8,14 +8,13 @@ interface CoffeeCardProps {
   onDelete: (id: string) => void;
 }
 
-function IntensityDots({level}: {level: number}) {
+function StarRating({rating}: {rating: number}) {
   return (
-    <View style={styles.dotsRow}>
+    <View style={styles.starsRow}>
       {[1, 2, 3, 4, 5].map(i => (
-        <View
-          key={i}
-          style={[styles.dot, i <= level ? styles.dotFilled : styles.dotEmpty]}
-        />
+        <Text key={i} style={styles.star}>
+          {i <= rating ? '★' : '☆'}
+        </Text>
       ))}
     </View>
   );
@@ -25,8 +24,13 @@ export function CoffeeCard({coffee, onEdit, onDelete}: CoffeeCardProps) {
   return (
     <View style={styles.card}>
       <View style={styles.topRow}>
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{coffee.type}</Text>
+        <View style={styles.badges}>
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{coffee.type}</Text>
+          </View>
+          <View style={[styles.badge, styles.roastBadge]}>
+            <Text style={styles.badgeText}>{coffee.roast}</Text>
+          </View>
         </View>
         <View style={styles.actions}>
           <TouchableOpacity
@@ -44,18 +48,20 @@ export function CoffeeCard({coffee, onEdit, onDelete}: CoffeeCardProps) {
 
       <Text style={styles.brand}>{coffee.brand}</Text>
 
-      <View style={styles.bottomRow}>
-        <IntensityDots level={coffee.intensity} />
-        <Text style={styles.dot_sep}>·</Text>
-        <Text style={styles.quantity}>{coffee.quantity}g</Text>
-      </View>
+      <StarRating rating={coffee.rating} />
+
+      {coffee.comment ? (
+        <Text style={styles.comment} numberOfLines={2}>
+          {coffee.comment}
+        </Text>
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#1A0A02',
+    backgroundColor: '#4f2009',
     borderRadius: 18,
     padding: 18,
     marginHorizontal: 16,
@@ -69,6 +75,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  badges: {
+    flexDirection: 'row',
+    gap: 6,
+    flexShrink: 1,
+  },
   badge: {
     backgroundColor: '#2A1005',
     borderWidth: 1,
@@ -76,6 +87,9 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 5,
+  },
+  roastBadge: {
+    borderColor: '#4A2614',
   },
   badgeText: {
     color: '#D4924A',
@@ -105,35 +119,21 @@ const styles = StyleSheet.create({
     fontSize: 21,
     fontWeight: '700',
     color: '#F0E2D0',
-    marginBottom: 14,
+    marginBottom: 10,
   },
-  bottomRow: {
+  starsRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
+    gap: 3,
   },
-  dotsRow: {
-    flexDirection: 'row',
-    gap: 5,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
-  dotFilled: {
-    backgroundColor: '#D4924A',
-  },
-  dotEmpty: {
-    backgroundColor: '#3D2010',
-  },
-  dot_sep: {
-    color: '#5A3A22',
+  star: {
     fontSize: 18,
+    color: '#D4924A',
   },
-  quantity: {
+  comment: {
+    marginTop: 10,
     color: '#9E7A5A',
     fontSize: 14,
-    fontWeight: '500',
+    lineHeight: 20,
+    fontStyle: 'italic',
   },
 });
