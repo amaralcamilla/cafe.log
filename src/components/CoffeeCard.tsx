@@ -61,13 +61,13 @@ export function CoffeeCard({coffee, onEdit, onDelete}: CoffeeCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#4f2009',
+    backgroundColor: '#603c2a',
     borderRadius: 18,
     padding: 18,
     marginHorizontal: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#4A2614',
+    borderColor: '#9b6548',
   },
   topRow: {
     flexDirection: 'row',
@@ -81,18 +81,18 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   badge: {
-    backgroundColor: '#2A1005',
+    backgroundColor: '#084c4d',
     borderWidth: 1,
-    borderColor: '#6A3A1A',
+    borderColor: '#9b6548',
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 5,
   },
   roastBadge: {
-    borderColor: '#4A2614',
+    borderColor: '#9b6548',
   },
   badgeText: {
-    color: '#D4924A',
+    color: '#dda970',
     fontSize: 12,
     fontWeight: '600',
     letterSpacing: 0.5,
@@ -105,12 +105,12 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: '#2A1505',
+    backgroundColor: '#084c4d',
     alignItems: 'center',
     justifyContent: 'center',
   },
   deleteBtnBg: {
-    backgroundColor: '#2A0805',
+    backgroundColor: '#084c4d',
   },
   actionIcon: {
     fontSize: 15,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   brand: {
     fontSize: 21,
     fontWeight: '700',
-    color: '#F0E2D0',
+    color: '#eae0ce',
     marginBottom: 10,
   },
   starsRow: {
@@ -127,11 +127,11 @@ const styles = StyleSheet.create({
   },
   star: {
     fontSize: 18,
-    color: '#D4924A',
+    color: '#dda970',
   },
   comment: {
     marginTop: 10,
-    color: '#9E7A5A',
+    color: '#a5d4b6',
     fontSize: 14,
     lineHeight: 20,
     fontStyle: 'italic',

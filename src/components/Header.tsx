@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#4A2614',
+    borderBottomColor: '#9b6548',
   },
   logo: {
     fontSize: 42,
@@ -30,12 +30,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '800',
-    color: '#F0E2D0',
+    color: '#eae0ce',
     letterSpacing: 0.3,
   },
   subtitle: {
     fontSize: 12,
-    color: '#9E7A5A',
+    color: '#a5d4b6',
     letterSpacing: 1.2,
     marginTop: 2,
   },

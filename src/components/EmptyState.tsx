@@ -9,12 +9,12 @@ export function EmptyState({onAdd}: EmptyStateProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>☕</Text>
-      <Text style={styles.title}>Nenhum café ainda</Text>
+      <Text style={styles.title}>Tá faltando combustível{'\n'}para codar :(</Text>
       <Text style={styles.message}>
-        Comece registrando{'\n'}o seu primeiro café!
+        Registre seu primeiro café
       </Text>
       <TouchableOpacity style={styles.button} onPress={onAdd}>
-        <Text style={styles.buttonText}>+ Adicionar Café</Text>
+        <Text style={styles.buttonText}>+ Adicionar café</Text>
       </TouchableOpacity>
     </View>
   );
@@ -34,24 +34,25 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#F0E2D0',
+    color: '#eae0ce',
     marginBottom: 10,
+    textAlign: 'center',
   },
   message: {
     fontSize: 15,
-    color: '#9E7A5A',
+    color: '#a5d4b6',
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 36,
   },
   button: {
-    backgroundColor: '#D4924A',
+    backgroundColor: '#1d8d8f',
     paddingHorizontal: 32,
     paddingVertical: 15,
     borderRadius: 999,
   },
   buttonText: {
-    color: '#0F0600',
+    color: '#eae0ce',
     fontWeight: '700',
     fontSize: 15,
   },
