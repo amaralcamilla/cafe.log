@@ -1,23 +1,17 @@
 import {useState, useEffect} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Coffee, CoffeeInput} from '../types/coffee';
 import {coffeeService} from '../services/coffeeService';
-
-const STORAGE_KEY = '@cafelog:coffees';
+import {coffeeStorage} from '../services/coffeeStorage';
 
 export function useCoffees() {
   const [coffees, setCoffees] = useState<Coffee[]>([]);
 
   useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEY).then(json => {
-      if (json) {
-        setCoffees(JSON.parse(json));
-      }
-    });
+    coffeeStorage.load().then(setCoffees);
   }, []);
 
   useEffect(() => {
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(coffees));
+    coffeeStorage.save(coffees);
   }, [coffees]);
 
   function add(input: CoffeeInput) {

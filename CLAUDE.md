@@ -26,14 +26,15 @@ Requires Node >= 22.11.0.
 ```
 App.tsx
   └── HomeScreen (state owner)
-        ├── useCoffees() hook  ← all CRUD logic lives here
-        │     └── coffeeService  ← pure functions (add/edit/delete)
+        ├── useCoffees() hook  ← state + CRUD logic
+        │     ├── coffeeService   ← pure functions (create/update/remove)
+        │     └── coffeeStorage   ← AsyncStorage read/write
         ├── CoffeeCard          ← renders each entry; emits edit/delete
         ├── CoffeeForm          ← modal form for add & edit
         ├── Header / EmptyState ← presentational only
 ```
 
-State is local (`useState` inside `useCoffees`). Data is persisted with `AsyncStorage` — the full list is saved as JSON under the key `@cafelog:coffees` on every change and loaded on app start.
+State is local (`useState` inside `useCoffees`). Data is persisted with `AsyncStorage` via `coffeeStorage` — the full list is saved as JSON under the key `@cafelog:coffees` on every change and loaded on app start.
 
 ### Coffee data model
 
