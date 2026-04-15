@@ -1,40 +1,31 @@
 import React, {useState} from 'react';
 import {FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity,} from 'react-native';
-import {Coffee, CoffeeInput} from '../types/coffee';
-import {useCoffees} from '../hooks/useCoffees';
+import {Coffee, } from '../types/coffee';
 import {Header} from '../components/Header';
 import {CoffeeCard} from '../components/CoffeeCard';
 import {CoffeeForm} from '../components/CoffeeForm';
 import {EmptyState} from '../components/EmptyState';
 
 export function HomeScreen() {
-  const {coffees, add, edit, remove} = useCoffees();
   const [formVisible, setFormVisible] = useState(false);
   const [editingCoffee, setEditingCoffee] = useState<Coffee | null>(null);
 
   function handleAdd() {
-    setEditingCoffee(null);
-    setFormVisible(true);
+      setFormVisible(true);
   }
 
-  function handleEdit(coffee: Coffee) {
-    setEditingCoffee(coffee);
-    setFormVisible(true);
+  function handleEdit() {
+      setFormVisible(true);
   }
 
-  function handleSave(id: string | null, input: CoffeeInput) {
-    if (id) {
-      edit(id, input);
-    } else {
-      add(input);
-    }
-  }
+  function handleSave() {}
 
   function handleClose() {
     setFormVisible(false);
     setEditingCoffee(null);
   }
 
+  const coffees: Coffee[] = [];
   const hasItems = coffees.length > 0;
 
   return (
@@ -55,7 +46,7 @@ export function HomeScreen() {
           data={coffees}
           keyExtractor={item => item.id}
           renderItem={({item}) => (
-            <CoffeeCard coffee={item} onEdit={handleEdit} onDelete={remove} />
+            <CoffeeCard coffee={item} onEdit={handleEdit} onDelete={() => null} />
           )}
           contentContainerStyle={styles.list}
         />
