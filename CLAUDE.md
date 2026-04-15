@@ -5,13 +5,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm start          # Start Metro dev server
-npm run ios        # Run on iOS simulator
-npm run android    # Run on Android emulator
-npm test           # Run Jest tests
-npm test -- --testPathPattern=App  # Run a single test file
-npm run lint       # Run ESLint
+yarn start         # Start Metro dev server
+yarn ios           # Run on iOS simulator
+yarn android       # Run on Android emulator
+yarn test          # Run Jest tests
+yarn test --testPathPattern=App  # Run a single test file
+yarn lint          # Run ESLint
 ```
+
+Use **yarn** (not npm) to install dependencies: `yarn add <package>`
 
 Requires Node >= 22.11.0.
 
@@ -31,7 +33,7 @@ App.tsx
         ├── Header / EmptyState ← presentational only
 ```
 
-State is local (`useState` inside `useCoffees`). There is no persistence layer — data resets on app reload.
+State is local (`useState` inside `useCoffees`). Data is persisted with `AsyncStorage` — the full list is saved as JSON under the key `@cafelog:coffees` on every change and loaded on app start.
 
 ### Coffee data model
 

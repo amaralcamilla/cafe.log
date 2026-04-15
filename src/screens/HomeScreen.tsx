@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity,} from 'react-native';
-import {Coffee} from '../types/coffee';
+import {Coffee, CoffeeInput} from '../types/coffee';
 import {useCoffees} from '../hooks/useCoffees';
 import {Header} from '../components/Header';
 import {CoffeeCard} from '../components/CoffeeCard';
@@ -9,7 +9,7 @@ import {EmptyState} from '../components/EmptyState';
 
 
 export function HomeScreen() {
-    const {coffees, remove} = useCoffees();
+    const {coffees,add, edit, remove} = useCoffees();
     const [formVisible, setFormVisible] = useState(false);
     const [editingCoffee, setEditingCoffee] = useState<Coffee | null>(null);
 
@@ -23,7 +23,13 @@ export function HomeScreen() {
         setFormVisible(true);
     }
 
-    function handleSave() {
+    function handleSave(id: string | null, input: CoffeeInput) {
+        if(id){
+            edit(id, input)
+        } else {
+            add(input)
+        }
+
     }
 
     function handleClose() {

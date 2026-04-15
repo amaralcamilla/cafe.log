@@ -76,10 +76,10 @@ export function CoffeeForm({visible, coffee, onSave, onClose}: CoffeeFormProps) 
       animationType="slide"
       transparent
       statusBarTranslucent>
-      {/* Backdrop separado do KAV para evitar conflito de layout */}
+
       <Pressable style={[StyleSheet.absoluteFill, styles.overlay]} onPress={onClose} />
 
-      {/* KAV como filho direto do Modal, sem Pressable aninhado */}
+
       <KeyboardAvoidingView
         style={styles.sheetWrapper}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

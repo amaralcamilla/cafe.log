@@ -1,24 +1,38 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Coffee, CoffeeInput} from '../types/coffee';
 import {coffeeService} from '../services/coffeeService';
 
+const STORAGE_KEY = '@cafelog:coffees';
 
 export function useCoffees() {
-    const [coffees, setCoffees] = useState<Coffee[]>([]);
+  const [coffees, setCoffees] = useState<Coffee[]>([]);
 
-    function add(input: CoffeeInput) {
-        setCoffees(prev => [coffeeService.create(input), ...prev]);
-    }
+  useEffect(() => {
+    AsyncStorage.getItem(STORAGE_KEY).then(json => {
+      if (json) {
+        setCoffees(JSON.parse(json));
+      }
+    });
+  }, []);
 
-    function edit(id: string, input: CoffeeInput) {
-        setCoffees(prev =>
-            prev.map(cafe => (cafe.id === id ? coffeeService.update(cafe, input) : cafe)),
-        );
-    }
+  useEffect(() => {
+    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(coffees));
+  }, [coffees]);
 
-    function remove(id: string) {
-        setCoffees(prev => coffeeService.remove(prev, id));
-    }
+  function add(input: CoffeeInput) {
+    setCoffees(prev => [coffeeService.create(input), ...prev]);
+  }
 
-    return {coffees, add, edit, remove};
+  function edit(id: string, input: CoffeeInput) {
+    setCoffees(prev =>
+      prev.map(cafe => (cafe.id === id ? coffeeService.update(cafe, input) : cafe)),
+    );
+  }
+
+  function remove(id: string) {
+    setCoffees(prev => coffeeService.remove(prev, id));
+  }
+
+  return {coffees, add, edit, remove};
 }
